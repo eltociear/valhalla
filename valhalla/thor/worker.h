@@ -138,6 +138,8 @@ protected:
   meili::MapMatcherFactory matcher_factory;
   baldr::AttributesController controller;
   Centroid centroid_gen;
+  std::vector<uint32_t> hierarchy_max_up_transitions;
+  std::vector<float> hierarchy_expansion_within_dist;
 
 private:
   std::string service_name() const override {

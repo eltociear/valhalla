@@ -115,6 +115,8 @@ config = {
         'max_reserved_labels_count': 1000000,
         'clear_reserved_memory': False,
         'extended_search': False,
+        'hierarchy_max_up_transitions': {"highway": 0, "arterial": 400, "local": 100},
+        'hierarchy_expansion_within_dist': {"highway": -1.0, "arterial": 100000.0, "local": 5000.0},
     },
     'odin': {
         'logging': {'type': 'std_out', 'color': True, 'file_name': 'path_to_some_file.log'},

@@ -145,6 +145,7 @@ BaseCostingOptionsConfig::BaseCostingOptionsConfig()
 DynamicCost::DynamicCost(const Costing& costing,
                          const TravelMode mode,
                          uint32_t access_mask,
+                         // TODO: need to pass the hierarchy limits here as array/vector
                          bool penalize_uturns)
     : pass_(0), allow_transit_connections_(false), allow_destination_only_(true),
       allow_conditional_destination_(false), travel_mode_(mode), access_mask_(access_mask),
