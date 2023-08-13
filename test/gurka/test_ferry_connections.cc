@@ -148,10 +148,20 @@ TEST(Standalone, TruckFerryDuration) {
                                            {{"/costing_options/truck/use_ferry", "1"},
                                             {"/costing_options/truck/ferry_cost", "0"}});
 
+  // save the duration without ferry cost
+  double duration_no_cost = fastest.directions().routes(0).legs(0).summary().time();
+  auto shape_no_cost = fastest.directions().routes(0).legs(0).shape();
+
   // verify we took the ferry edge and the duration tag was respected
   auto ferry_edge = fastest.trip().routes(0).legs(0).node(1).edge();
   ASSERT_EQ(ferry_edge.use(), valhalla::TripLeg_Use::TripLeg_Use_kFerryUse);
   ASSERT_NEAR(ferry_edge.speed(), ferry_edge.length_km() / (ferry_secs * kHourPerSec), 0.1);
+
+  fastest = gurka::do_action(valhalla::Options::route, map, {"A", "D"}, "truck",
+                             {{"/costing_options/truck/use_ferry", "1"},
+                              {"/costing_options/truck/ferry_cost", "5"}});
+  EXPECT_EQ(shape_no_cost, fastest.directions().routes(0).legs(0).shape());
+  EXPECT_EQ(duration_no_cost, fastest.directions().routes(0).legs(0).summary().time() + 50.0);
 }
 
 TEST_F(FerryTest, DoNotReclassifyFerryConnection) {
