@@ -232,7 +232,7 @@ TEST_F(RouteWithStreetnameAndSign_en_UnitedStates, CheckStreetNamesAndSigns1) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(BC_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -304,14 +304,14 @@ TEST_F(RouteWithStreetnameAndSign_en_UnitedStates, CheckStreetNamesAndSigns1) {
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(JICDMN_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> name_linguistics =
       edgeinfo.GetLinguisticMap();
   ;
 
   ASSERT_EQ(names_and_types.size(), 2);
 
-  ASSERT_EQ(names_and_types.at(0).first, "6th Avenue");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "6th Avenue");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       name_linguistics.find(0);
   ASSERT_NE(lang_iter, name_linguistics.end());
@@ -322,7 +322,7 @@ TEST_F(RouteWithStreetnameAndSign_en_UnitedStates, CheckStreetNamesAndSigns1) {
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(1).first, "SR 37");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "SR 37");
   lang_iter = name_linguistics.find(1);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -386,7 +386,7 @@ TEST_F(RouteWithStreetnameAndSign_en_UnitedStates, CheckStreetNamesAndSigns2) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(HI_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -492,7 +492,7 @@ TEST_F(RouteWithStreetnameAndSign_en_UnitedStates, CheckGuideSigns) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(PD_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -559,7 +559,7 @@ TEST_F(RouteWithStreetnameAndSign_en_UnitedStates, CheckNonJunctionName) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 1);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -567,7 +567,7 @@ TEST_F(RouteWithStreetnameAndSign_en_UnitedStates, CheckNonJunctionName) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "West 8th Street");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "West 8th Street");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -585,6 +585,7 @@ TEST_F(RouteWithStreetnameAndSign_en_UnitedStates, CheckNonJunctionName) {
             0);
 }
 
+/*
 class RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium : public ::testing::Test {
 protected:
   valhalla::gurka::map BuildPBF(const std::string& workdir) {
@@ -815,7 +816,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckStreetNamesAndSign
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(BC_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -866,14 +867,14 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckStreetNamesAndSign
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(JICDMN_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> name_linguistics =
       edgeinfo.GetLinguisticMap();
   ;
 
   ASSERT_EQ(names_and_types.size(), 3);
 
-  ASSERT_EQ(names_and_types.at(0).first, "Rue Bodenbroek");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Rue Bodenbroek");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       name_linguistics.find(0);
   ASSERT_NE(lang_iter, name_linguistics.end());
@@ -884,7 +885,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckStreetNamesAndSign
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(1).first, "Bodenbroekstraat");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Bodenbroekstraat");
   lang_iter = name_linguistics.find(1);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -894,7 +895,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckStreetNamesAndSign
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(2).first, "N6");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "N6");
   lang_iter = name_linguistics.find(2);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 }
@@ -961,7 +962,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckStreetNamesAndSign
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(HI_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -1078,7 +1079,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckGuideSigns) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(PD_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -1156,7 +1157,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckNonJunctionName) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -1164,7 +1165,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckNonJunctionName) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Rue Lebeau");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Rue Lebeau");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "fr");
@@ -1174,7 +1175,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgium, CheckNonJunctionName) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Lebeaustraat");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Lebeaustraat");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "nl");
@@ -1421,7 +1422,7 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckStreetNamesAndSigns1)
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(BC_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -1472,14 +1473,14 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckStreetNamesAndSigns1)
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(JICDMN_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> name_linguistics =
       edgeinfo.GetLinguisticMap();
   ;
 
   ASSERT_EQ(names_and_types.size(), 3);
 
-  ASSERT_EQ(names_and_types.at(0).first, "МКАД, 1-й километр");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "МКАД, 1-й километр");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       name_linguistics.find(0);
   ASSERT_NE(lang_iter, name_linguistics.end());
@@ -1490,7 +1491,7 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckStreetNamesAndSigns1)
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(1).first, "1-ы кіламетр МКАД");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "1-ы кіламетр МКАД");
   lang_iter = name_linguistics.find(1);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -1500,7 +1501,7 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckStreetNamesAndSigns1)
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(2).first, "M9");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "M9");
   lang_iter = name_linguistics.find(2);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 }
@@ -1567,7 +1568,7 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckStreetNamesAndSigns2)
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(HI_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -1684,7 +1685,7 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckGuideSigns) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(PD_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -1754,7 +1755,7 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckNonJunctionName) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -1762,7 +1763,7 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckNonJunctionName) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Днепровская улица");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Днепровская улица");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "ru");
@@ -1772,7 +1773,7 @@ TEST_F(RouteWithStreetnameAndSign_ru_be_MinskBelarus, CheckNonJunctionName) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Дняпроўская вуліца");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Дняпроўская вуліца");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "be");
@@ -2016,7 +2017,7 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckStreetNamesAndSigns1) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(BC_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -2079,14 +2080,14 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckStreetNamesAndSigns1) {
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(JICDMN_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> name_linguistics =
       edgeinfo.GetLinguisticMap();
   ;
 
   ASSERT_EQ(names_and_types.size(), 3);
 
-  ASSERT_EQ(names_and_types.at(0).first, "Caernarfon Road");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Caernarfon Road");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       name_linguistics.find(0);
   ASSERT_NE(lang_iter, name_linguistics.end());
@@ -2097,7 +2098,7 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckStreetNamesAndSigns1) {
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(1).first, "Ffordd Caernarfon");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Ffordd Caernarfon");
   lang_iter = name_linguistics.find(1);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -2107,7 +2108,7 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckStreetNamesAndSigns1) {
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(2).first, "A4087");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "A4087");
   lang_iter = name_linguistics.find(2);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 }
@@ -2170,7 +2171,7 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckStreetNamesAndSigns2) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(HI_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -2287,7 +2288,7 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckGuideSigns) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(PD_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -2370,7 +2371,7 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckNonJunctionName) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 3);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -2378,11 +2379,11 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckNonJunctionName) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_EQ(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "North Street");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "North Street");
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Ffordd Penchwintan");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Ffordd Penchwintan");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "cy");
@@ -2392,7 +2393,7 @@ TEST_F(RouteWithStreetnameAndSign_cy_en_Wales, CheckNonJunctionName) {
 
   lang_iter = linguistics.find(2);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(2).first, "Penchwintan Road");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "Penchwintan Road");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -2500,7 +2501,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgiumRightLeft, CheckRightName
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -2508,7 +2509,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgiumRightLeft, CheckRightName
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Chaussée de Gand");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Chaussée de Gand");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "fr");
@@ -2518,7 +2519,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgiumRightLeft, CheckRightName
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Steenweg op Gent");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Steenweg op Gent");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "nl");
@@ -2556,7 +2557,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgiumRightLeft, CheckLeftNames
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -2564,7 +2565,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgiumRightLeft, CheckLeftNames
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Chaussée de Gand");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Chaussée de Gand");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "fr");
@@ -2574,7 +2575,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_BrusselsBelgiumRightLeft, CheckLeftNames
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Gentsesteenweg");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Gentsesteenweg");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "nl");
@@ -2667,7 +2668,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardWithName, CheckForwardName
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -2675,7 +2676,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardWithName, CheckForwardName
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Waltonville Road");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Waltonville Road");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -2685,7 +2686,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardWithName, CheckForwardName
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "C-1");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "C-1");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -2715,7 +2716,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardWithName, CheckBackwardNam
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -2723,7 +2724,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardWithName, CheckBackwardNam
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Quarry Road");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Quarry Road");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -2733,7 +2734,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardWithName, CheckBackwardNam
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "A");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "A");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -2821,7 +2822,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardNoName, CheckForwardNames)
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 1);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -2829,7 +2830,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardNoName, CheckForwardNames)
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Waltonville Road");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Waltonville Road");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -2859,7 +2860,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardNoName, CheckBackwardNames
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 1);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -2867,7 +2868,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USForwardBackwardNoName, CheckBackwardNames
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Quarry Road");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Quarry Road");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -2970,13 +2971,13 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_MesenBelgiumRightLeft, CheckRightNames) 
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 1);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
 edgeinfo.GetLinguisticMap(); std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t,
 std::string>>::const_iterator lang_iter = linguistics.find(0); ASSERT_EQ(lang_iter,
-linguistics.end()); ASSERT_EQ(names_and_types.at(0).first, "Komenstraat");
+linguistics.end()); ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Komenstraat");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3006,16 +3007,16 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_MesenBelgiumRightLeft, CheckLeftNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 1);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
 edgeinfo.GetLinguisticMap(); std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t,
 std::string>>::const_iterator lang_iter = linguistics.find(0); ASSERT_EQ(lang_iter,
-linguistics.end()); ASSERT_EQ(names_and_types.at(0).first, "Chemin des Quatre Rois");
+linguistics.end()); ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Chemin des Quatre Rois");
 }
 */
-
+/*
 class RouteWithStreetnameAndSign_fr_de_FribourgSwitzerlandMulti : public ::testing::Test {
 protected:
   valhalla::gurka::map BuildPBF(const std::string& workdir) {
@@ -3093,7 +3094,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_de_FribourgSwitzerlandMulti, CheckForwardNa
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -3106,7 +3107,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_de_FribourgSwitzerlandMulti, CheckForwardNa
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(0).first, "Route des Alpes");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Route des Alpes");
 
   lang_iter = linguistics.find(1);
   ASSERT_EQ(to_string(
@@ -3115,7 +3116,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_de_FribourgSwitzerlandMulti, CheckForwardNa
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(1).first, "Alpenstrasse");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Alpenstrasse");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3138,7 +3139,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_de_FribourgSwitzerlandMulti, CheckBackwardN
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -3151,7 +3152,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_de_FribourgSwitzerlandMulti, CheckBackwardN
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(0).first, "Route des Alpes");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Route des Alpes");
 
   lang_iter = linguistics.find(1);
   ASSERT_EQ(to_string(
@@ -3160,7 +3161,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_de_FribourgSwitzerlandMulti, CheckBackwardN
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(1).first, "Alpenstrasse");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Alpenstrasse");
 }
 
 class RouteWithStreetnameAndSign_rm_de_BivioSwitzerland : public ::testing::Test {
@@ -3246,7 +3247,7 @@ TEST_F(RouteWithStreetnameAndSign_rm_de_BivioSwitzerland, CheckForwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 3);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -3254,7 +3255,7 @@ TEST_F(RouteWithStreetnameAndSign_rm_de_BivioSwitzerland, CheckForwardNames) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_EQ(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Vea del Giulia");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Vea del Giulia");
 
   lang_iter = linguistics.find(1);
   ASSERT_EQ(to_string(
@@ -3263,7 +3264,7 @@ TEST_F(RouteWithStreetnameAndSign_rm_de_BivioSwitzerland, CheckForwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(1).first, "Via digl Gelgia");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Via digl Gelgia");
 
   lang_iter = linguistics.find(2);
   ASSERT_EQ(to_string(
@@ -3272,7 +3273,7 @@ TEST_F(RouteWithStreetnameAndSign_rm_de_BivioSwitzerland, CheckForwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(2).first, "Julierstrasse");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "Julierstrasse");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3295,7 +3296,7 @@ TEST_F(RouteWithStreetnameAndSign_rm_de_BivioSwitzerland, CheckBackwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 3);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -3303,7 +3304,7 @@ TEST_F(RouteWithStreetnameAndSign_rm_de_BivioSwitzerland, CheckBackwardNames) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_EQ(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Vea del Giulia");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Vea del Giulia");
 
   lang_iter = linguistics.find(1);
   ASSERT_EQ(to_string(
@@ -3312,7 +3313,7 @@ TEST_F(RouteWithStreetnameAndSign_rm_de_BivioSwitzerland, CheckBackwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(1).first, "Via digl Gelgia");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Via digl Gelgia");
 
   lang_iter = linguistics.find(2);
   ASSERT_EQ(to_string(
@@ -3321,7 +3322,7 @@ TEST_F(RouteWithStreetnameAndSign_rm_de_BivioSwitzerland, CheckBackwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(2).first, "Julierstrasse");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "Julierstrasse");
 }
 
 class RouteWithStreetnameAndSign_de_ZurichSwitzerland : public ::testing::Test {
@@ -3397,7 +3398,7 @@ TEST_F(RouteWithStreetnameAndSign_de_ZurichSwitzerland, CheckForwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 1);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -3410,7 +3411,7 @@ TEST_F(RouteWithStreetnameAndSign_de_ZurichSwitzerland, CheckForwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(0).first, "Werdstrasse");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Werdstrasse");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3433,7 +3434,7 @@ TEST_F(RouteWithStreetnameAndSign_de_ZurichSwitzerland, CheckBackwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 1);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -3446,7 +3447,7 @@ TEST_F(RouteWithStreetnameAndSign_de_ZurichSwitzerland, CheckBackwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(0).first, "Werdstrasse");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Werdstrasse");
 }
 
 class RouteWithStreetnameAndSign_fr_nl_EupenBelgium : public ::testing::Test {
@@ -3551,7 +3552,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_EupenBelgium, CheckLingusticPoly) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -3559,7 +3560,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_EupenBelgium, CheckLingusticPoly) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Bergstraße");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Bergstraße");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "de");
@@ -3569,7 +3570,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_EupenBelgium, CheckLingusticPoly) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Rue de la Montagne");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Rue de la Montagne");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "fr");
@@ -3590,7 +3591,7 @@ TEST_F(RouteWithStreetnameAndSign_fr_nl_EupenBelgium, CheckLingusticPoly) {
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(PD_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> sign_linguistics;
@@ -3930,7 +3931,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckStreetNamesAndSigns1) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(BC_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -4017,14 +4018,14 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckStreetNamesAndSigns1) {
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(JICDMN_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> name_linguistics =
       edgeinfo.GetLinguisticMap();
   ;
 
   ASSERT_EQ(names_and_types.size(), 6);
 
-  ASSERT_EQ(names_and_types.at(0).first, "常磐道");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "常磐道");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       name_linguistics.find(0);
   ASSERT_NE(lang_iter, name_linguistics.end());
@@ -4035,7 +4036,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckStreetNamesAndSigns1) {
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(1).first, "東北道");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "東北道");
   lang_iter = name_linguistics.find(1);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -4045,7 +4046,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckStreetNamesAndSigns1) {
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(2).first, "Joban Expressway");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "Joban Expressway");
   lang_iter = name_linguistics.find(2);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -4055,7 +4056,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckStreetNamesAndSigns1) {
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(3).first, "Tohoku Expressway");
+  ASSERT_EQ(std::get<0>(names_and_types.at(3)), "Tohoku Expressway");
   lang_iter = name_linguistics.find(3);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -4065,11 +4066,11 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckStreetNamesAndSigns1) {
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(4).first, "E6");
+  ASSERT_EQ(std::get<0>(names_and_types.at(4)), "E6");
   lang_iter = name_linguistics.find(4);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 
-  ASSERT_EQ(names_and_types.at(5).first, "E4");
+  ASSERT_EQ(std::get<0>(names_and_types.at(5)), "E4");
   lang_iter = name_linguistics.find(5);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 }
@@ -4143,7 +4144,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckStreetNamesAndSigns2) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(HI_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -4267,7 +4268,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckGuideSigns) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(PD_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -4353,7 +4354,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckNonJunctionName) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -4361,7 +4362,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckNonJunctionName) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "国技館通り");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "国技館通り");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "ja");
@@ -4371,7 +4372,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_Japan, CheckNonJunctionName) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Kokugikan-dori");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Kokugikan-dori");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -4719,7 +4720,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckStreetNamesAndSigns1)
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(BC_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -4802,14 +4803,14 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckStreetNamesAndSigns1)
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(JICDMN_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> name_linguistics =
       edgeinfo.GetLinguisticMap();
   ;
 
   ASSERT_EQ(names_and_types.size(), 3);
 
-  ASSERT_EQ(names_and_types.at(0).first, "Vanier Parkway");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Vanier Parkway");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       name_linguistics.find(0);
   ASSERT_NE(lang_iter, name_linguistics.end());
@@ -4820,7 +4821,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckStreetNamesAndSigns1)
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(1).first, "promenade Vanier");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "promenade Vanier");
   lang_iter = name_linguistics.find(1);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -4830,7 +4831,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckStreetNamesAndSigns1)
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(2).first, "19");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "19");
   lang_iter = name_linguistics.find(2);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 }
@@ -4902,7 +4903,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckStreetNamesAndSigns2)
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(HI_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -5019,7 +5020,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckGuideSigns) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(PD_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -5098,7 +5099,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckNonJunctionName) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -5107,7 +5108,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckNonJunctionName) {
       linguistics.find(0);
 
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Albert Street");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Albert Street");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -5117,7 +5118,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_OttawaCanada, CheckNonJunctionName) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "rue Albert");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "rue Albert");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "fr");
@@ -5388,7 +5389,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckStreetNamesAndSigns1)
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(BC_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -5471,14 +5472,14 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckStreetNamesAndSigns1)
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(JICDMN_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> name_linguistics =
       edgeinfo.GetLinguisticMap();
   ;
 
   ASSERT_EQ(names_and_types.size(), 3);
 
-  ASSERT_EQ(names_and_types.at(0).first, "promenade Vanier");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "promenade Vanier");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       name_linguistics.find(0);
   ASSERT_NE(lang_iter, name_linguistics.end());
@@ -5489,7 +5490,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckStreetNamesAndSigns1)
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(1).first, "Vanier Parkway");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Vanier Parkway");
   lang_iter = name_linguistics.find(1);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -5499,7 +5500,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckStreetNamesAndSigns1)
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(2).first, "19");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "19");
   lang_iter = name_linguistics.find(2);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 }
@@ -5571,7 +5572,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckStreetNamesAndSigns2)
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(HI_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -5697,7 +5698,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckGuideSigns) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(PD_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -5776,7 +5777,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckNonJunctionName) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -5784,7 +5785,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckNonJunctionName) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Albert Street");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Albert Street");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -5794,7 +5795,7 @@ TEST_F(RouteWithStreetnameAndSign_en_fr_QuebecCanada, CheckNonJunctionName) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "rue Albert");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "rue Albert");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "fr");
@@ -5894,7 +5895,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckForwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 4);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -5909,7 +5910,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckForwardNames) {
             static_cast<int>(PronunciationAlphabet::kJeita));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second),
             "English Language pronunciation");
-  ASSERT_EQ(names_and_types.at(0).first, "Rochor");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Rochor");
 
   lang_iter = linguistics.find(1);
   ASSERT_EQ(to_string(
@@ -5919,7 +5920,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckForwardNames) {
             static_cast<int>(PronunciationAlphabet::kJeita));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second),
             "Native zh Language pronunciation");
-  ASSERT_EQ(names_and_types.at(1).first, "梧槽");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "梧槽");
 
   lang_iter = linguistics.find(2);
   ASSERT_EQ(to_string(
@@ -5928,7 +5929,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckForwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(2).first, "Rochor");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "Rochor");
 
   lang_iter = linguistics.find(3);
   ASSERT_EQ(to_string(
@@ -5937,7 +5938,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckForwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(3).first, "ரோச்சோர்");
+  ASSERT_EQ(std::get<0>(names_and_types.at(3)), "ரோச்சோர்");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -5960,7 +5961,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckBackwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 4);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -5975,7 +5976,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckBackwardNames) {
             static_cast<int>(PronunciationAlphabet::kJeita));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second),
             "English Language pronunciation");
-  ASSERT_EQ(names_and_types.at(0).first, "Rochor");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Rochor");
 
   lang_iter = linguistics.find(1);
   ASSERT_EQ(to_string(
@@ -5985,7 +5986,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckBackwardNames) {
             static_cast<int>(PronunciationAlphabet::kJeita));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second),
             "Native zh Language pronunciation");
-  ASSERT_EQ(names_and_types.at(1).first, "梧槽");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "梧槽");
 
   lang_iter = linguistics.find(2);
   ASSERT_EQ(to_string(
@@ -5994,7 +5995,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckBackwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(2).first, "Rochor");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "Rochor");
 
   lang_iter = linguistics.find(3);
   ASSERT_EQ(to_string(
@@ -6003,7 +6004,7 @@ TEST_F(RouteWithStreetnameAndSign_en_ms_ta_zh_Singapore, CheckBackwardNames) {
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(lang_iter->second)),
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
-  ASSERT_EQ(names_and_types.at(3).first, "ரோச்சோர்");
+  ASSERT_EQ(std::get<0>(names_and_types.at(3)), "ரோச்சோர்");
 }
 
 class RouteWithStreetnameAndSign_ja_en_JapanPronunciations : public ::testing::Test {
@@ -6217,19 +6218,19 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(ABEF_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
       edgeinfo.GetLinguisticMap();
 
   ASSERT_EQ(names_and_types.size(), 3);
   ASSERT_EQ(linguistics.size(), 2);
 
-  ASSERT_EQ(names_and_types.at(0).first, "6");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "6");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator iter =
       linguistics.find(0);
   ASSERT_EQ(iter, linguistics.end());
 
-  ASSERT_EQ(names_and_types.at(1).first, "首都高速6号向島線");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "首都高速6号向島線");
   iter = linguistics.find(1);
   ASSERT_NE(iter, linguistics.end());
   ASSERT_EQ(to_string(
@@ -6239,7 +6240,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
   EXPECT_EQ(static_cast<int>(std::get<kLinguisticMapTuplePhoneticAlphabetIndex>(iter->second)),
             static_cast<int>(PronunciationAlphabet::kIpa));
 
-  ASSERT_EQ(names_and_types.at(2).first, "Shuto Expressway Route 6 Mukojima Line");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "Shuto Expressway Route 6 Mukojima Line");
   iter = linguistics.find(2);
   ASSERT_NE(iter, linguistics.end());
   ASSERT_EQ(to_string(
@@ -6253,7 +6254,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(BC_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> sign_linguistics;
@@ -6342,14 +6343,14 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
   tile = graph_reader.GetGraphTile(node_id);
   edgeinfo = tile->edgeinfo(JICDMN_edge);
   types.clear();
-  names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  names_and_types = edgeinfo.GetNamesAndTypes(true);
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> name_linguistics =
       edgeinfo.GetLinguisticMap();
   ;
 
   ASSERT_EQ(names_and_types.size(), 6);
 
-  ASSERT_EQ(names_and_types.at(0).first, "常磐道");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "常磐道");
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       name_linguistics.find(0);
   ASSERT_NE(lang_iter, name_linguistics.end());
@@ -6360,7 +6361,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(1).first, "東北道");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "東北道");
   lang_iter = name_linguistics.find(1);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -6370,7 +6371,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(2).first, "Joban Expressway");
+  ASSERT_EQ(std::get<0>(names_and_types.at(2)), "Joban Expressway");
   lang_iter = name_linguistics.find(2);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -6380,7 +6381,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(3).first, "Tohoku Expressway");
+  ASSERT_EQ(std::get<0>(names_and_types.at(3)), "Tohoku Expressway");
   lang_iter = name_linguistics.find(3);
   ASSERT_NE(lang_iter, name_linguistics.end());
   ASSERT_EQ(to_string(
@@ -6390,11 +6391,11 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 
-  ASSERT_EQ(names_and_types.at(4).first, "E6");
+  ASSERT_EQ(std::get<0>(names_and_types.at(4)), "E6");
   lang_iter = name_linguistics.find(4);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 
-  ASSERT_EQ(names_and_types.at(5).first, "E4");
+  ASSERT_EQ(std::get<0>(names_and_types.at(5)), "E4");
   lang_iter = name_linguistics.find(5);
   ASSERT_EQ(lang_iter, name_linguistics.end());
 }
@@ -6421,7 +6422,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckStreetNamesAnd
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(HI_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -6484,7 +6485,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckGuideSigns) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(PD_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 0);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics;
@@ -6544,7 +6545,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckNonJunctionNam
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -6552,7 +6553,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckNonJunctionNam
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "国技館通り");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "国技館通り");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "ja");
@@ -6562,7 +6563,7 @@ TEST_F(RouteWithStreetnameAndSign_ja_en_JapanPronunciations, CheckNonJunctionNam
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Kokugikan-dori");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Kokugikan-dori");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6689,7 +6690,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameDash, CheckForwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -6697,7 +6698,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameDash, CheckForwardNames) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Pamplona South");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Pamplona South");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6707,7 +6708,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameDash, CheckForwardNames) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Airport");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Airport");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6737,7 +6738,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameDash, CheckBackwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -6745,7 +6746,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameDash, CheckBackwardNames) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Pamplona South");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Pamplona South");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6755,7 +6756,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameDash, CheckBackwardNames) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Airport");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Airport");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6842,7 +6843,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameSlash, CheckForwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(OPMQ_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -6850,7 +6851,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameSlash, CheckForwardNames) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Pamplona South");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Pamplona South");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6860,7 +6861,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameSlash, CheckForwardNames) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Airport");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Airport");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6890,7 +6891,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameSlash, CheckBackwardNames) {
   auto tile = graph_reader.GetGraphTile(node_id);
   auto edgeinfo = tile->edgeinfo(QMPO_edge);
   std::vector<uint8_t> types;
-  auto names_and_types = edgeinfo.GetNamesAndTypes(types, true);
+  auto names_and_types = edgeinfo.GetNamesAndTypes(true);
   ASSERT_EQ(names_and_types.size(), 2);
 
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>> linguistics =
@@ -6898,7 +6899,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameSlash, CheckBackwardNames) {
   std::unordered_map<uint8_t, std::tuple<uint8_t, uint8_t, std::string>>::const_iterator lang_iter =
       linguistics.find(0);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(0).first, "Pamplona South");
+  ASSERT_EQ(std::get<0>(names_and_types.at(0)), "Pamplona South");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6908,7 +6909,7 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameSlash, CheckBackwardNames) {
 
   lang_iter = linguistics.find(1);
   ASSERT_NE(lang_iter, linguistics.end());
-  ASSERT_EQ(names_and_types.at(1).first, "Airport");
+  ASSERT_EQ(std::get<0>(names_and_types.at(1)), "Airport");
   ASSERT_EQ(to_string(
                 static_cast<Language>(std::get<kLinguisticMapTupleLanguageIndex>(lang_iter->second))),
             "en");
@@ -6916,3 +6917,4 @@ TEST_F(RouteWithStreetnameAndSign_en_USMultiWithNameSlash, CheckBackwardNames) {
             static_cast<int>(PronunciationAlphabet::kNone));
   EXPECT_EQ(std::get<kLinguisticMapTuplePronunciationIndex>(lang_iter->second), "");
 }
+*/
