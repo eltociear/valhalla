@@ -581,7 +581,7 @@ BidirectionalAStar::GetBestPath(valhalla::Location& origin,
         if (opp_status.set() == EdgeSet::kPermanent ||
             (opp_status.set() == EdgeSet::kTemporary &&
              edgelabels_reverse_[opp_status.index()].predecessor() == kInvalidLabel)) {
-          if (SetForwardConnection(graphreader, fwd_pred) &&
+          if (SetConnection<ExpansionType::forward>(graphreader, fwd_pred) &&
               opp_status.set() == EdgeSet::kPermanent) {
             continue;
           }
@@ -631,7 +631,7 @@ BidirectionalAStar::GetBestPath(valhalla::Location& origin,
         if (opp_status.set() == EdgeSet::kPermanent ||
             (opp_status.set() == EdgeSet::kTemporary &&
              edgelabels_forward_[opp_status.index()].predecessor() == kInvalidLabel)) {
-          if (SetReverseConnection(graphreader, rev_pred) &&
+          if (SetConnection<ExpansionType::reverse>(graphreader, rev_pred) &&
               opp_status.set() == EdgeSet::kPermanent) {
             continue;
           }
@@ -799,11 +799,20 @@ BidirectionalAStar::GetBestPath(valhalla::Location& origin,
 // The edge on the forward search connects to a reached edge on the reverse
 // search tree. Check if this is the best connection so far and set the
 // search threshold.
-bool BidirectionalAStar::SetForwardConnection(GraphReader& graphreader, const BDEdgeLabel& pred) {
-  // Find pred on opposite side
-  GraphId oppedge = pred.opp_edgeid();
-  EdgeStatusInfo oppedgestatus = edgestatus_reverse_.Get(oppedge);
-  auto opp_pred = edgelabels_reverse_[oppedgestatus.index()];
+template <const ExpansionType expansion_direction>
+bool BidirectionalAStar::SetConnection(GraphReader& graphreader, const BDEdgeLabel& pred) {
+  const bool FORWARD = expansion_direction == ExpansionType::forward;
+
+  auto& edge_labels = FORWARD ? edgelabels_forward_ : edgelabels_reverse_;
+  auto& opp_edge_labels = FORWARD ? edgelabels_reverse_ : edgelabels_forward_;
+  auto& opp_edge_statuses = FORWARD ? edgestatus_reverse_ : edgestatus_forward_;
+
+  GraphId opp_edgeid = pred.opp_edgeid();
+  EdgeStatusInfo opp_edge_status = opp_edge_statuses.Get(opp_edgeid);
+  const auto& opp_pred = opp_edge_labels[opp_edge_status.index()];
+
+  const auto fwd_edge_id = FORWARD ? pred.edgeid() : opp_edgeid;
+  const auto& fwd_pred = FORWARD ? pred : opp_pred;
 
   // Disallow connections that are part of an uturn on an internal edge
   if (pred.internal_turn() != InternalTurn::kNoTurn) {
@@ -814,8 +823,9 @@ bool BidirectionalAStar::SetForwardConnection(GraphReader& graphreader, const BD
   if (pred.on_complex_rest()) {
     // Lets dig deeper and test if we are really triggering these restrictions
     // since the complex restriction can span many edges
-    if (IsBridgingEdgeRestricted(graphreader, edgelabels_forward_, edgelabels_reverse_, pred,
-                                 opp_pred, costing_)) {
+    const auto& rev_pred = FORWARD ? opp_pred : pred;
+    if (IsBridgingEdgeRestricted(graphreader, edgelabels_forward_, edgelabels_reverse_, fwd_pred,
+                                 rev_pred, costing_)) {
       return false;
     }
   }
@@ -824,16 +834,16 @@ bool BidirectionalAStar::SetForwardConnection(GraphReader& graphreader, const BD
   // end node of this directed edge. Get total cost.
   float c;
   if (pred.predecessor() != kInvalidLabel) {
-    // Get the start of the predecessor edge on the forward path. Cost is to
-    // the end this edge, plus the cost to the end of the reverse predecessor,
+    // Get the start of the predecessor edge on the reverse path. Cost is to
+    // the end this edge, plus the cost to the end of the forward predecessor,
     // plus the transition cost.
-    c = edgelabels_forward_[pred.predecessor()].cost().cost + opp_pred.cost().cost +
+    c = edge_labels[pred.predecessor()].cost().cost + opp_pred.cost().cost +
         pred.transition_cost().cost;
   } else {
-    // If no predecessor on the forward path get the predecessor on
-    // the reverse path to form the cost.
+    // If no predecessor on this path get the predecessor on
+    // the opposite path to form the cost.
     uint32_t predidx = opp_pred.predecessor();
-    float oppcost = (predidx == kInvalidLabel) ? 0 : edgelabels_reverse_[predidx].cost().cost;
+    float oppcost = (predidx == kInvalidLabel) ? 0 : opp_edge_labels[predidx].cost().cost;
     c = pred.cost().cost + oppcost + opp_pred.transition_cost().cost;
   }
 
@@ -852,76 +862,7 @@ bool BidirectionalAStar::SetForwardConnection(GraphReader& graphreader, const BD
   }
 
   // Keep the best ones at the front all others to the back
-  best_connections_.emplace_back(CandidateConnection{pred.edgeid(), oppedge, c});
-
-  if (c < best_connections_.front().cost)
-    std::swap(best_connections_.front(), best_connections_.back());
-
-  // setting this edge as connected
-  if (expansion_callback_) {
-    expansion_callback_(graphreader, pred.edgeid(), "bidirectional_astar", "c", pred.cost().secs,
-                        pred.path_distance(), pred.cost().cost);
-  }
-
-  return true;
-}
-
-// The edge on the reverse search connects to a reached edge on the forward
-// search tree. Check if this is the best connection so far and set the
-// search threshold.
-bool BidirectionalAStar::SetReverseConnection(GraphReader& graphreader, const BDEdgeLabel& rev_pred) {
-  GraphId fwd_edge_id = rev_pred.opp_edgeid();
-  EdgeStatusInfo fwd_edge_status = edgestatus_forward_.Get(fwd_edge_id);
-  auto fwd_pred = edgelabels_forward_[fwd_edge_status.index()];
-
-  // Disallow connections that are part of an uturn on an internal edge
-  if (rev_pred.internal_turn() != InternalTurn::kNoTurn) {
-    return false;
-  }
-
-  // Disallow connections that are part of a complex restriction
-  if (rev_pred.on_complex_rest()) {
-    // Lets dig deeper and test if we are really triggering these restrictions
-    // since the complex restriction can span many edges
-    if (IsBridgingEdgeRestricted(graphreader, edgelabels_forward_, edgelabels_reverse_, fwd_pred,
-                                 rev_pred, costing_)) {
-      return false;
-    }
-  }
-
-  // Get the opposing edge - a candidate shortest path has been found to the
-  // end node of this directed edge. Get total cost.
-  float c;
-  if (rev_pred.predecessor() != kInvalidLabel) {
-    // Get the start of the predecessor edge on the reverse path. Cost is to
-    // the end this edge, plus the cost to the end of the forward predecessor,
-    // plus the transition cost.
-    c = edgelabels_reverse_[rev_pred.predecessor()].cost().cost + fwd_pred.cost().cost +
-        rev_pred.transition_cost().cost;
-  } else {
-    // If no predecessor on the reverse path get the predecessor on
-    // the forward path to form the cost.
-    uint32_t predidx = fwd_pred.predecessor();
-    float oppcost = (predidx == kInvalidLabel) ? 0 : edgelabels_forward_[predidx].cost().cost;
-    c = rev_pred.cost().cost + oppcost + fwd_pred.transition_cost().cost;
-  }
-
-  // Set thresholds to extend search
-  if (cost_threshold_ == std::numeric_limits<float>::max() || c < best_connections_.front().cost) {
-    if (desired_paths_count_ == 1) {
-      cost_threshold_ = c + kThresholdDelta;
-    } else {
-      // For short routes it may be not enough to use just scale to extend the cost threshold.
-      // So, we also add the delta to find more alternatives.
-      // TODO: use different constants to extend the search based on route distance.
-      cost_threshold_ = kAlternativeCostExtend * c + kThresholdDelta;
-      iterations_threshold_ =
-          edgelabels_forward_.size() + edgelabels_reverse_.size() + kAlternativeIterationsDelta;
-    }
-  }
-
-  // Keep the best ones at the front all others to the back
-  best_connections_.emplace_back(CandidateConnection{fwd_edge_id, rev_pred.edgeid(), c});
+  best_connections_.emplace_back(CandidateConnection{fwd_edge_id, opp_edgeid, c});
 
   if (c < best_connections_.front().cost)
     std::swap(best_connections_.front(), best_connections_.back());

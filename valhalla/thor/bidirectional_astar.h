@@ -202,22 +202,14 @@ protected:
                       const baldr::TimeInfo& time_info);
 
   /**
-   * The edge on the forward search connects to a reached edge on the reverse
+   * The edge on the forward/reverse search connects to a reached edge on the reverse
    * search tree. Check if this is the best connection so far and set the
    * search threshold.
    * @param  pred  Edge label of the predecessor.
    * @return Returns true if a connection was set, false if not (if on a complex restriction).
    */
-  bool SetForwardConnection(baldr::GraphReader& graphreader, const sif::BDEdgeLabel& pred);
-
-  /**
-   * The edge on the reverse search connects to a reached edge on the forward
-   * search tree. Check if this is the best connection so far and set the
-   * search threshold.
-   * @param  pred  Edge label of the predecessor.
-   * @return Returns true if a connection was set, false if not (if on a complex restriction).
-   */
-  bool SetReverseConnection(baldr::GraphReader& graphreader, const sif::BDEdgeLabel& pred);
+  template <const ExpansionType expansion_direction>
+  bool SetConnection(baldr::GraphReader& graphreader, const sif::BDEdgeLabel& pred);
 
   /**
    * Form the path from the adjacency lists. Recovers the path from the
